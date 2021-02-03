@@ -13,7 +13,7 @@ class Output {
 async function get_head_commit() {
   //   console.log(JSON.stringify(github.context.payload.head_commit, null, 2))
   if (github.context.payload.head_commit != null)
-    return Object.assign({}, github.context.payload.head_commit)
+    return JSON.parse(JSON.stringify(github.context.payload.head_commit))
 
   let commits_url = github.context.repository.commits_url
 
