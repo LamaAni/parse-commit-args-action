@@ -1,0 +1,19 @@
+name: 'Test action'
+on:
+  pull_request:
+    branches:
+      - 'master'
+  release:
+    branches:
+      - 'master'
+    types:
+      - created
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Test args reader'
+        uses: LamaAni/parse-commit-args-action@master
