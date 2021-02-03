@@ -11,6 +11,7 @@ class Output {
 }
 
 async function get_head_commit() {
+  console.log(JSON.stringify(github.context.payload.head_commit, null, 2))
   if (github.context.payload.head_commit != null)
     return github.context.payload.head_commit
 
