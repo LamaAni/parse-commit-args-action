@@ -50,4 +50,5 @@ async function main() {
 
 main().catch((err) => {
   core.setFailed(error.message)
+  process.exit(1)
 })
