@@ -31,26 +31,14 @@ async function get_head_commit(context = null) {
 
   commits_url = commits_url.replace('{/sha}', `/${context.sha}`)
 
+  /**
+   * @type {[Object]}
+   */
   const all_commits = await get_json_request(commits_url, null, {
     'User-Agent': 'parse-commit-args-action',
   })
 
-  // const all_commits = await new Promise((resolve, reject) => {
-  //   request(
-  //     commits_url,
-  //     {
-  //       headers: {
-  //         'User-Agent': 'parse-commit-args-action',
-  //       },
-  //     },
-  //     (err, rsp, body) => {
-  //       if (err != null) reject(err)
-  //       else resolve(body)
-  //     }
-  //   )
-  // })
-
-  return all_commits[0].commit
+  return all_commits.reverse()[0].commit
 }
 
 async function main() {
