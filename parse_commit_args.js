@@ -49,6 +49,7 @@ async function main() {
 }
 
 main().catch((err) => {
+  console.error(err)
   core.setFailed(error.message)
   process.exit(1)
 })
