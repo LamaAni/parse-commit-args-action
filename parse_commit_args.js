@@ -11,9 +11,8 @@ class Output {
 }
 
 async function get_head_commit() {
-  //   console.log(JSON.stringify(github.context.payload.head_commit, null, 2))
   if (github.context.payload.head_commit != null)
-    return JSON.parse(JSON.stringify(github.context.payload.head_commit))
+    return github.context.payload.head_commit
 
   let commits_url = github.context.repository.commits_url
 
@@ -43,7 +42,8 @@ async function get_head_commit() {
 
 async function main() {
   const ref = github.context.ref
-  console.log(JSON.stringify(get_head_commit(), null, 2))
+  const head_commit = await get_head_commit()
+  console.log(JSON.stringify(head_commit, null, 2))
   console.log('\n\n\n\n')
   console.log(JSON.stringify(github.context, null, 2))
 }
