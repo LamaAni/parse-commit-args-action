@@ -18,7 +18,7 @@ async function get_head_commit() {
 
   const all_commits = JSON.parse(
     await new Promise((resolve, reject) => {
-      request(github.context.repository.commits_url, (rsp) => {
+      request(commits_url, (rsp) => {
         try {
           let data = ''
           rsp.on('data', (chunk) => {
