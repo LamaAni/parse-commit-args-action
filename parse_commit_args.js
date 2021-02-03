@@ -1,5 +1,6 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
+const request = require('http').request
 
 class Output {
   constructor() {
@@ -9,10 +10,42 @@ class Output {
   }
 }
 
-try {
-  // `who-to-greet` input defined in action metadata file
-  const ref = github.context.ref
-  console.log(JSON.stringify(github.context, null, 2))
-} catch (error) {
-  core.setFailed(error.message)
+async function get_head_commit() {
+  if (github.context.payload.head_commit != null)
+    return github.context.payload.head_commit
+
+  let commits_url = github.context.repository.commits_url
+
+  const all_commits = JSON.parse(
+    await new Promise((resolve, reject) => {
+      request(github.context.repository.commits_url, (rsp) => {
+        try {
+          let data = ''
+          rsp.on('data', (chunk) => {
+            data += chunk
+          })
+          rsp.on('end', () => {
+            resolve(data)
+          })
+          rsp.on('error', (err) => {
+            reject(err)
+          })
+        } catch (err) {
+          reject(err)
+        }
+      })
+    })
+  )
+
+  return all_commits[0].commit
 }
+
+async function main() {
+  const ref = github.context.ref
+  console.log(JSON.stringify(get_head_commit(), null, 2))
+  //   console.log(JSON.stringify(github.context, null, 2))
+}
+
+main().catch((err) => {
+  core.setFailed(error.message)
+})
