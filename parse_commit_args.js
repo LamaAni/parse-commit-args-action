@@ -43,7 +43,8 @@ async function get_head_commit() {
 async function main() {
   const ref = github.context.ref
   console.log(JSON.stringify(get_head_commit(), null, 2))
-  //   console.log(JSON.stringify(github.context, null, 2))
+  console.log('\n\n\n\n')
+  console.log(JSON.stringify(github.context, null, 2))
 }
 
 main().catch((err) => {
