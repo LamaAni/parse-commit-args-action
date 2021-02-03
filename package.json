@@ -27,6 +27,8 @@
   "homepage": "https://github.com/LamaAni/parse-commit-args-action#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0"
+    "@actions/github": "^4.0.0",
+    "bent": "^7.3.12",
+    "request": "^2.88.2"
   }
 }

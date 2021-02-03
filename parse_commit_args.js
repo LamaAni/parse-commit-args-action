@@ -1,6 +1,8 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
-const request = require('http').request
+const bent = require('bent')
+const get_json_request = bent('GET', 'json')
+// const request = require('request')
 
 class Output {
   constructor() {
@@ -10,34 +12,33 @@ class Output {
   }
 }
 
-async function get_head_commit() {
-  if (github.context.payload.head_commit != null)
-    return github.context.payload.head_commit
+/**
+ *  @typedef {import('@actions/github/lib/context').Context} GithubContext
+ */
 
-  let commits_url = github.context.repository.commits_url
+/**
+ * @param {GithubContext} context
+ */
+async function get_head_commit(context = null) {
+  context = context || github.context
 
-  const all_commits = JSON.parse(
-    await new Promise((resolve, reject) => {
-      request(commits_url, (rsp) => {
-        try {
-          let data = ''
-          rsp.on('data', (chunk) => {
-            data += chunk
-          })
-          rsp.on('end', () => {
-            resolve(data)
-          })
-          rsp.on('error', (err) => {
-            reject(err)
-          })
-        } catch (err) {
-          reject(err)
-        }
-      })
-    })
-  )
+  if (context.payload.head_commit != null) return context.payload.head_commit
 
-  return all_commits[0].commit
+  /** @type {string} */
+  let commits_url =
+    (context.payload.pull_request || {}).commits_url ||
+    context.payload.repository.commits_url
+
+  commits_url = commits_url.replace('{/sha}', `/${context.sha}`)
+
+  /**
+   * @type {[Object]}
+   */
+  const all_commits = await get_json_request(commits_url, null, {
+    'User-Agent': 'parse-commit-args-action',
+  })
+
+  return all_commits.reverse()[0].commit
 }
 
 async function main() {
@@ -48,6 +49,16 @@ async function main() {
   console.log(JSON.stringify(github.context, null, 2))
 }
 
-main().catch((err) => {
-  core.setFailed(error.message)
-})
+module.exports = {
+  main,
+  get_head_commit,
+  Output,
+}
+
+if (require.main == module) {
+  main().catch((err) => {
+    console.error(err)
+    core.setFailed(error.message)
+    process.exit(1)
+  })
+}
