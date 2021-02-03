@@ -12,7 +12,7 @@ class Output {
 try {
   // `who-to-greet` input defined in action metadata file
   const ref = github.context.ref
-  console.log(github.context.payload.comment)
+  console.log(JSON.stringify(github.context, null, 2))
 } catch (error) {
   core.setFailed(error.message)
 }
