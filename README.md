@@ -1,10 +1,69 @@
 # parse-commit-args-action
 
-A github action that parses the github commit arguments and allows for use defined commit arguments, via the commit message, to be detected.
+Parses the last commit and parses user input arguments (eg. --my-arg [val]). Adds helpful default arguments for
+release detection and docker. (versio, is_release, is_pull_request ...)
+
+Allows for:
+1. Overriding default args (see overrideable column). (i.e. override version, or is_release for example)
+1. Select which events allow args reading.
+1. Select argument format via regex. (e.g !!my-arg)
 
 #### If you like it, star it, so other people would also use it.
 
 # TL;DR
+
+```yaml
+name: 'Test action'
+on:
+  pull_request:
+    branches:
+      - 'master'
+  release:
+    branches:
+      - 'master'
+    types:
+      - created
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'parse_commit_args'
+        id: args
+        uses: LamaAni/parse-commit-args-action@master
+
+      - name: 'show args'
+        run: echo "$THE_ARGS"
+        env:
+          THE_ARGS: '${{ toJSON(steps.args.outputs) }}'
+
+      - name: 'run on release only'
+        if: ${{steps.args.outputs.is_release=="true"}}
+        run: echo "$THE_ARGS"
+        env:
+          THE_ARGS: '${{ toJSON(steps.args.outputs) }}'
+
+      - name: 'run on use falg only'
+        if: ${{steps.args.outputs.my_flag=="120"}}
+        run: echo "$THE_ARGS"
+        env:
+          THE_ARGS: '${{ toJSON(steps.args.outputs) }}'
+
+```
+
+To activate the user flag,
+
+```shell
+git add . && git commit -m"Some commit text --my_flag 120" && git push
+```
+
+To override `is_release`,
+
+```shell
+git add . && git commit -m"Some commit text --my_flag 120 --is_release true" && git push
+```
 
 # Default output arguments
 
