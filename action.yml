@@ -1,13 +1,5 @@
-name: "parse commit args"
-description: "A github action that parses commit arguments and allows for use defined commit arguments to be detected"
-inputs:
-  who-to-greet: # id of input
-    description: "Who to greet"
-    required: true
-    default: "World"
-outputs:
-  time: # id of output
-    description: "The time we greeted you"
+name: 'parse commit args'
+description: 'A github action that parses commit arguments and allows for use defined commit arguments to be detected'
 runs:
-  using: "node12"
-  main: "parse_commit_args.js"
+  using: 'node12'
+  main: 'parse_commit_args.js'
