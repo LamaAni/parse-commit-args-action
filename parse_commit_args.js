@@ -32,7 +32,7 @@ const path = require('path')
 
 /**
  * @param {GithubContext} context
- * @returns {Commit}
+ * @returns {[Commit]}
  */
 async function get_commits(context = null) {
   context = context || github.context
@@ -58,10 +58,25 @@ async function get_commits(context = null) {
   return all_commits.map((c) => c.commit)
 }
 
-const DEFAULT_ARG_MATCH_REGEX = /[-]{2}[a-zA-Z]\w+/g
+const DEFAULT_ARG_MATCH_REGEX = /[-]{2}([a-zA-Z0-9][\w-]+)/g
+const MATCH_ARG_REGEX =
+  process.env.MATCH_ARG_REGEX != null
+    ? new RegExp(MATCH_ARG_REGEX)
+    : DEFAULT_ARG_MATCH_REGEX
 
-class CommitArgsParse {
-  constructor({ match_args_regex = DEFAULT_ARG_MATCH_REGEX } = {}) {
+const ARG_REGEX_GROUP_JOIN_SYMBOL =
+  process.env.ARG_REGEX_GROUP_JOIN_SYMBOL || '_'
+
+const VERSION_MARKER_SPLIT_SYMBOL =
+  process.env.VERSION_MARKER_SPLIT_SYMBOL || '.'
+
+const LOAD_MESSAGE_ARGUMENTS_ON_EVENTS =
+  process.env.LOAD_USER_ARGUMENTS_EVENTS == null
+    ? null
+    : process.env.LOAD_USER_ARGUMENTS_EVENTS.split([' ', ','])
+
+class CommitArgs {
+  constructor({ match_args_regex = MATCH_ARG_REGEX } = {}) {
     this.is_release = false
     this.evnet_name = '[unknwon]'
     this.is_pull_request = false
@@ -75,8 +90,8 @@ class CommitArgsParse {
     /**
      * @type {Commit}
      */
-    this.head_commit = {}
-    this.message = ''
+    this.last_commit = {}
+    this.commit_message = ''
     this._match_args_regex = match_args_regex
   }
 
@@ -85,52 +100,73 @@ class CommitArgsParse {
    */
   async load_context(context) {
     context = context || github.context
+    const ref = context.ref || 'unknown/unknown/unknown'
+    const commits = await get_commits(context)
+    const last_commit = commits.length == 0 ? null : commits[commits.length - 1]
 
     this.is_release = context.eventName == 'release'
-    this.is_pull_request = context.head_ref != null
-
+    this.is_pull_request = context.payload.pull_request != null
     this.evnet_name = context.eventName
-    this.ref = context.ref
-    this.ref_name = path.basename(this.ref)
 
-    this.commits = await get_commits(context)
-    this.head_commit =
-      this.commits.length == 0 ? null : this.commits.reverse()[0]
+    this.version_type = ref.split('/')[1]
+    this.version = path.basename(context.ref)
 
-    this.message = (this.head_commit || {}).message || ''
-    this.args = this._parse_commit_message_args()
+    const commit_message = (last_commit || {}).message || null
+    if (
+      commit_message != null &&
+      commit_message.trim() > 0 &&
+      (LOAD_MESSAGE_ARGUMENTS_ON_EVENTS == null ||
+        new Set(LOAD_MESSAGE_ARGUMENTS_ON_EVENTS).has(context.eventName))
+    )
+      this._parse_commit_message_args(commit_message)
+
+    let cascade_version = ''
+    this.versions = this.version.split(VERSION_MARKER_SPLIT_SYMBOL).map((v) => {
+      if (cascade_version.length == 0) cascade_version = v
+      else cascade_version += VERSION_MARKER_SPLIT_SYMBOL + v
+      return cascade_version
+    })
+
+    this.ref = ref
+    this.commits = commits
+    this.last_commit = last_commit
+    this.commit_message = commit_message
 
     return this
   }
 
-  _parse_commit_message_args() {
+  _parse_commit_message_args(message = null) {
     let match_args_regex =
       this._match_args_regex instanceof RegExp
         ? this._match_args_regex
         : RegExp(this._match_args_regex, 'g')
-    const words = (this.message || '').split(' ')
-    const args = {}
+    const words = (message || this.commit_message || '').match(
+      /[^\s"'][^\s]+|["][^"]*["]|['][^']+[']/g
+    )
     let arg_name = null
     for (let word of words) {
-      if (word.match(match_args_regex) != null) {
-        if (arg_name != null) args[arg_name] = true
-        arg_name = word
+      word = word.trim()
+      if (word.match(/["].*["]|['].*[']/) != null)
+        word = word.slice(1, word.length - 1)
+      let match = new RegExp(match_args_regex).exec(word)
+      if (match != null) {
+        if (arg_name != null) this[arg_name] = true
+        arg_name =
+          match.length < 2
+            ? match[0]
+            : match.slice(1).join(ARG_REGEX_GROUP_JOIN_SYMBOL)
       } else {
-        if (arg_name != null) args[arg_name] = word
+        if (arg_name != null) this[arg_name] = word
         arg_name = null
       }
     }
 
-    if (arg_name != null) args[arg_name] = true
-
-    return args
+    if (arg_name != null) this[arg_name] = true
   }
 }
 
 async function parse_args(context = null) {
-  const args = await new CommitArgsParse().load_context(
-    context || github.context
-  )
+  const args = await new CommitArgs().load_context(context || github.context)
   let key = ''
   for (key of Object.keys(args)) {
     if (key.startsWith('_')) continue
@@ -141,13 +177,13 @@ async function parse_args(context = null) {
 module.exports = {
   parse_args,
   get_commits,
-  CommitArgsParse,
+  CommitArgs,
 }
 
 if (require.main == module) {
   parse_args().catch((err) => {
     console.error(err)
-    core.setFailed(error.message)
+    core.setFailed(error.commit_message)
     process.exit(1)
   })
 }

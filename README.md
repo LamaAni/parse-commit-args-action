@@ -1,6 +1,10 @@
 # parse-commit-args-action
 
-A github action that parses commit arguments and allows for use defined commit arguments to be detected
+A github action that parses the github commit arguments and allows for use defined commit arguments, via the commit mesage, to be detected.
+
+### Remember, if you like it, star it, so other people would also use it.
+
+# TL;DR
 
 # Licence
 
