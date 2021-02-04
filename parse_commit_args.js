@@ -48,9 +48,11 @@ async function get_commits(context = null) {
   /**
    * @type {[Object]}
    */
-  const all_commits = await get_json_request(commits_url, null, {
+  let all_commits = await get_json_request(commits_url, null, {
     'User-Agent': 'parse-commit-args-action',
   })
+
+  all_commits = Array.isArray(all_commits) ? all_commits : [all_commits]
 
   return all_commits.map((c) => c.commit)
 }
