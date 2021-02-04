@@ -2,7 +2,7 @@
 
 A github action that parses the github commit arguments and allows for use defined commit arguments, via the commit mesage, to be detected.
 
-### Remember, if you like it, star it, so other people would also use it.
+#### If you like it, star it, so other people would also use it.
 
 # TL;DR
 
