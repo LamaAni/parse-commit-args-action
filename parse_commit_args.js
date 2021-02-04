@@ -84,9 +84,9 @@ LOAD_MESSAGE_ARGUMENTS_ON_EVENTS =
 class CommitArgs {
   constructor({ match_args_regex = MATCH_ARG_REGEX } = {}) {
     this.is_release = false
-    this.event_name = '[unknwon]'
+    this.event_name = '[unknown]'
     this.is_pull_request = false
-    this.ref = '[unknwon]'
+    this.ref = '[unknown]'
 
     /**
      * @type {[Commit]}

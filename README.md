@@ -1,6 +1,6 @@
 # parse-commit-args-action
 
-A github action that parses the github commit arguments and allows for use defined commit arguments, via the commit mesage, to be detected.
+A github action that parses the github commit arguments and allows for use defined commit arguments, via the commit message, to be detected.
 
 #### If you like it, star it, so other people would also use it.
 
@@ -26,7 +26,7 @@ commit_message | The last commit message | false
 
 Name | Description | Default value
 ---|---|---
-LOAD_MESSAGE_ARGUMENTS_ON_EVENTS | Conrols which gihub events( release, push...) are allowed to load user commit message args. Otherwise these are ignored. null or empty means all, none never load args | ''
+LOAD_MESSAGE_ARGUMENTS_ON_EVENTS | Controls which github events( release, push...) are allowed to load user commit message args. Otherwise these are ignored. null or empty means all, none never load args | ''
 VERSION_MARKER_SPLIT_SYMBOL| A symbol to split the cascading versions | .
 ARG_MATCH_REGEX | A regex pattern to detect an input argument word (eg. --my-arg). Will join all match groups to create the full argument. |  /[-]{2}([a-zA-Z0-9][\w-]+)/g
 ARG_REGEX_GROUP_JOIN_SYMBOL | Join symbol for between match groups | _

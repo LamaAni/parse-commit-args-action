@@ -1,5 +1,5 @@
 name: 'parse commit args'
-description: 'A github action that parses the github commit arguments and allows for use defined commit arguments, via the commit mesage, to be detected'
+description: 'Parses the last commit and extract args (--my-arg [val]). Default args exist.'
 runs:
   using: 'node12'
   main: 'parse_commit_args.js'
