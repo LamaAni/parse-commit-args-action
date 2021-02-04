@@ -14,7 +14,7 @@ is_release | If true, this is a release event | true
 is_pull_request | If true, this is a pull request | true
 event_name | The name of the github event | true
 version | The detected version (defaults to branch, head or tag). Will match the release name | true
----|---|---
+ | |
 versions | Array. Decomposition of the version using a split char (for use in docker releases). eg. fancy.0.1.12 -> \[fancy, fancy.0, fancy.0.1, fancy.0.1.12\] | false
 ref | the github ref | false
 last_commit | The last commit | false
