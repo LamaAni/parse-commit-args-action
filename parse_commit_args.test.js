@@ -6,10 +6,10 @@ async function test_context(context) {
 }
 
 async function main() {
-  console.log(await parse_args(require('./.local/example_release_context.json')))
-  await test_context(require('./.local/example_release_context.json'))
+  // console.log(await parse_args(require('./.local/example_release_context.json')))
+  // await test_context(require('./.local/example_release_context.json'))
   await test_context(require('./.local/example_push_context.json'))
-  await test_context(require('./.local/example_pr_context.json'))
+  // await test_context(require('./.local/example_pr_context.json'))
 }
 
 main().catch((err) => {

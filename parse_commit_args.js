@@ -98,26 +98,26 @@ class CommitArgsParse {
       this.commits.length == 0 ? null : this.commits.reverse()[0]
 
     this.message = (this.head_commit || {}).message || ''
-    this.args = this._parse_commit_message_args(this._match_args_regex)
+    this.args = this._parse_commit_message_args()
 
     return this
   }
 
-  _parse_commit_message_args(match_args_regex = DEFAULT_ARG_MATCH_REGEXF) {
-    match_args_regex =
-      match_args_regex instanceof RegExp
-        ? match_args_regex
-        : RegExp(match_args_regex, 'g')
+  _parse_commit_message_args() {
+    let match_args_regex =
+      this._match_args_regex instanceof RegExp
+        ? this._match_args_regex
+        : RegExp(this._match_args_regex, 'g')
     const words = (this.message || '').split(' ')
     const args = {}
     let arg_name = null
-    for (let word in words) {
+    for (let word of words) {
       if (word.match(match_args_regex) != null) {
         if (arg_name != null) args[arg_name] = true
         arg_name = word
       } else {
         if (arg_name != null) args[arg_name] = word
-        arg_name == null
+        arg_name = null
       }
     }
 
