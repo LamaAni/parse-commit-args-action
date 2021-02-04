@@ -22,4 +22,4 @@ jobs:
       - name: 'show args'
         run: echo "$THE_ARGS"
         env:
-          THE_ARGS: ${{steps.parse_commit_args.outputs.*}}
+          THE_ARGS: '${{ steps.parse_commit_args.outputs }}'
