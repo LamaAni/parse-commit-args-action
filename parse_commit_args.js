@@ -2,6 +2,7 @@ const core = require('@actions/core')
 const github = require('@actions/github')
 const bent = require('bent')
 const get_json_request = bent('GET', 'json')
+const path = require('path')
 // const request = require('request')
 
 /**
@@ -65,6 +66,8 @@ class CommitArgsParse {
     this.evnet_name = '[unknwon]'
     this.is_pull_request = false
     this.ref = '[unknwon]'
+    this.ref_name = '[unknwon]'
+
     /**
      * @type {[Commit]}
      */
@@ -74,7 +77,7 @@ class CommitArgsParse {
      */
     this.head_commit = {}
     this.message = ''
-    this.match_args_regex = match_args_regex
+    this._match_args_regex = match_args_regex
   }
 
   /**
@@ -88,12 +91,14 @@ class CommitArgsParse {
 
     this.evnet_name = context.eventName
     this.ref = context.ref
+    this.ref_name = path.basename(this.ref)
+
     this.commits = await get_commits(context)
     this.head_commit =
       this.commits.length == 0 ? null : this.commits.reverse()[0]
 
     this.message = (this.head_commit || {}).message || ''
-    this.args = this._parse_commit_message_args(this.match_args_regex)
+    this.args = this._parse_commit_message_args(this._match_args_regex)
 
     return this
   }
@@ -125,6 +130,11 @@ async function main() {
   console.log('\n\n\n\n\n')
   const args = await new CommitArgsParse().load_context(github.context)
   console.log(JSON.stringify(args, null, 2))
+  let key = ''
+  for (key of Object.key(args)) {
+    if (key.startsWith('_')) continue
+    core.setOutput(key, args[key])
+  }
 }
 
 module.exports = {
