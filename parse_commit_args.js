@@ -121,6 +121,8 @@ class CommitArgsParse {
       }
     }
 
+    if (arg_name != null) args[arg_name] = true
+
     return args
   }
 }
