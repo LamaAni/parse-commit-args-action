@@ -127,26 +127,25 @@ class CommitArgsParse {
   }
 }
 
-async function main() {
-  console.log(JSON.stringify(github.context, null, 2))
-  console.log('\n\n\n\n\n')
-  const args = await new CommitArgsParse().load_context(github.context)
-  console.log(JSON.stringify(args, null, 2))
+async function parse_args(context = null) {
+  const args = await new CommitArgsParse().load_context(
+    context || github.context
+  )
   let key = ''
-  for (key of Object.key(args)) {
+  for (key of Object.keys(args)) {
     if (key.startsWith('_')) continue
     core.setOutput(key, args[key])
   }
 }
 
 module.exports = {
-  main,
+  parse_args,
   get_commits,
   CommitArgsParse,
 }
 
 if (require.main == module) {
-  main().catch((err) => {
+  parse_args().catch((err) => {
     console.error(err)
     core.setFailed(error.message)
     process.exit(1)
