@@ -1,13 +1,13 @@
-const { get_head_commit } = require('./parse_commit_args')
+const { CommitArgsParse } = require('./parse_commit_args')
+
+async function test_context(context) {
+  const args = await new CommitArgsParse().load_context(context)
+  console.log(args)
+}
 
 async function main() {
-  console.log(
-    (await get_head_commit(require('./.local/example_push_context.json')))
-      .message
-  )
-  console.log(
-    (await get_head_commit(require('./.local/example_pr_context.json'))).message
-  )
+  await test_context(require('./.local/example_push_context.json'))
+  await test_context(require('./.local/example_pr_context.json'))
 }
 
 main().catch((err) => {
