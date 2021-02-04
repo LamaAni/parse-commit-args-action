@@ -20,6 +20,7 @@ jobs:
         uses: LamaAni/parse-commit-args-action@master
 
       - name: 'show args'
-        run: echo "$THE_ARGS"
+        run: bash -c "echo "$THE_ARGS"; echo "$THE_OPTIONS"
         env:
-          THE_ARGS: ${{join(steps.parse_commit_args.outputs.*, '\n')}}
+          THE_ARGS: ${{steps.parse_commit_args.outputs.args}}
+          THE_OPTIONS: ${{steps.parse_commit_args.outputs}}
