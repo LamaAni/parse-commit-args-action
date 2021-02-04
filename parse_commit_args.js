@@ -121,7 +121,7 @@ class CommitArgsParse {
 async function main() {
   const ref = github.context.ref
   const args = await new CommitArgsParse().load_context(github.context)
-  console.log(JSON.stringify(args))
+  console.log(JSON.stringify(args, null, 2))
 }
 
 module.exports = {
