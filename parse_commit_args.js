@@ -70,18 +70,23 @@ const ARG_REGEX_GROUP_JOIN_SYMBOL =
 const VERSION_MARKER_SPLIT_SYMBOL =
   process.env.VERSION_MARKER_SPLIT_SYMBOL || '.'
 
-const LOAD_MESSAGE_ARGUMENTS_ON_EVENTS =
-  process.env.LOAD_USER_ARGUMENTS_EVENTS == null
+let LOAD_MESSAGE_ARGUMENTS_ON_EVENTS =
+  process.env.LOAD_MESSAGE_ARGUMENTS_ON_EVENTS == null
+    ? ''
+    : process.env.LOAD_MESSAGE_ARGUMENTS_ON_EVENTS.split([' ', ','])
+
+LOAD_MESSAGE_ARGUMENTS_ON_EVENTS = LOAD_MESSAGE_ARGUMENTS_ON_EVENTS.trim()
+LOAD_MESSAGE_ARGUMENTS_ON_EVENTS =
+  LOAD_MESSAGE_ARGUMENTS_ON_EVENTS.length == 0
     ? null
-    : process.env.LOAD_USER_ARGUMENTS_EVENTS.split([' ', ','])
+    : LOAD_MESSAGE_ARGUMENTS_ON_EVENTS
 
 class CommitArgs {
   constructor({ match_args_regex = MATCH_ARG_REGEX } = {}) {
     this.is_release = false
-    this.evnet_name = '[unknwon]'
+    this.event_name = '[unknwon]'
     this.is_pull_request = false
     this.ref = '[unknwon]'
-    this.ref_name = '[unknwon]'
 
     /**
      * @type {[Commit]}
@@ -106,7 +111,7 @@ class CommitArgs {
 
     this.is_release = context.eventName == 'release'
     this.is_pull_request = context.payload.pull_request != null
-    this.evnet_name = context.eventName
+    this.event_name = context.eventName
 
     this.version_type = ref.split('/')[1]
     this.version = path.basename(context.ref)
