@@ -119,7 +119,7 @@ class CommitArgsParse {
 }
 
 async function main() {
-  console.log(JSON.stringify(args, github.context, 2))
+  console.log(JSON.stringify(github.context, null, 2))
   console.log('\n\n\n\n\n')
   const args = await new CommitArgsParse().load_context(github.context)
   console.log(JSON.stringify(args, null, 2))
