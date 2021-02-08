@@ -191,6 +191,8 @@ async function parse_args(context = null) {
     if (key.startsWith('_')) continue
     core.setOutput(key, args[key])
   }
+
+  return args
 }
 
 module.exports = {
