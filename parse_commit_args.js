@@ -126,11 +126,14 @@ class CommitArgs {
       this._parse_commit_message_args(commit_message)
 
     let cascade_version = ''
-    this.versions = this.version.split(VERSION_MARKER_SPLIT_SYMBOL).map((v) => {
-      if (cascade_version.length == 0) cascade_version = v
-      else cascade_version += VERSION_MARKER_SPLIT_SYMBOL + v
-      return cascade_version
-    })
+    this.versions = this.version
+      .split(VERSION_MARKER_SPLIT_SYMBOL)
+      .map((v) => {
+        if (cascade_version.length == 0) cascade_version = v
+        else cascade_version += VERSION_MARKER_SPLIT_SYMBOL + v
+        return cascade_version
+      })
+      .join(' ')
 
     this.ref = ref
     this.commits = commits
