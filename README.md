@@ -74,7 +74,7 @@ is_pull_request | If true, this is a pull request | true
 event_name | The name of the github event | true
 version | The detected version (defaults to branch, head or tag). Will match the release name | true
  | |
-versions | Array. Decomposition of the version using a split char (for use in docker releases). eg. fancy.0.1.12 -> \[fancy, fancy.0, fancy.0.1, fancy.0.1.12\] | false
+versions | Spaced out value. Decomposition of the version using a split char (for use in docker releases). eg. fancy.0.1.12 -> fancy fancy.0, fancy.0.1 fancy.0.1.12 | false
 ref | the github ref | false
 last_commit | The last commit | false
 commits | A collection of associated commits | false
@@ -89,6 +89,8 @@ LOAD_MESSAGE_ARGUMENTS_ON_EVENTS | Controls which github events( release, push..
 VERSION_MARKER_SPLIT_SYMBOL| A symbol to split the cascading versions | .
 ARG_MATCH_REGEX | A regex pattern to detect an input argument word (eg. --my-arg). Will join all match groups to create the full argument. |  /[-]{2}([a-zA-Z0-9][\w-]+)/g
 ARG_REGEX_GROUP_JOIN_SYMBOL | Join symbol for between match groups | _
+RUN_SCRIPT | A javascript script to run after the parameters have been evaluated. Run in method `async (args)=>{}` | empty
+RUN_SCRIPT_FILE | A javascript file to run after the parameters have been evaluated. expects, `module.exports=async (args)=>{}` | empty
 
 # Licence
 

@@ -173,8 +173,19 @@ class CommitArgs {
   }
 }
 
+async function do_run_env_script(args) {
+  if (process.env.RUN_SCRIPT == null) return
+  eval(process.env.RUN_SCRIPT)
+}
+
 async function parse_args(context = null) {
   const args = await new CommitArgs().load_context(context || github.context)
+
+  await do_run_env_script(args)
+  if (process.env.RUN_SCRIPT_FILE != null) {
+    await require(process.env.RUN_SCRIPT_FILE)(args)
+  }
+
   let key = ''
   for (key of Object.keys(args)) {
     if (key.startsWith('_')) continue
