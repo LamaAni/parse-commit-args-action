@@ -12,7 +12,7 @@ on:
     branches:
       - master
 jobs:
-  test-prepare:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: 'Test args reader'
@@ -24,13 +24,16 @@ jobs:
         env:
           THE_ARGS: '${{ toJSON(steps.parse_commit_args.outputs) }}'
 
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
       - name: 'Create the run matrix'
         id: set-matrix
         run: echo "::set-output name=matrix::{num:[0,1,2]}"
     outputs:
       run-parallel-info: ${{ steps.set-matrix.outputs.matrix }}
 
-  test-paralell:
+  paralell:
     needs:
       - prepare
     runs-on: ubuntu-latest
