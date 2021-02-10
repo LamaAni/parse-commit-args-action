@@ -12,7 +12,7 @@ on:
     branches:
       - master
 jobs:
-  build:
+  test-prepare:
     runs-on: ubuntu-latest
     steps:
       - name: 'Test args reader'
@@ -23,3 +23,29 @@ jobs:
         run: echo "$THE_ARGS"
         env:
           THE_ARGS: '${{ toJSON(steps.parse_commit_args.outputs) }}'
+
+      - name: 'Create the run matrix'
+        id: set-matrix
+        run: echo "::set-output name=matrix::{num:[0,1,2]}"
+    outputs:
+      run-parallel-info: ${{ steps.set-matrix.outputs.matrix }}
+
+  test-paralell:
+    needs:
+      - prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix: ${{fromJSON(needs.prepare.output.run-parallel-info)}}
+    steps:
+      - name: 'Checkout the code'
+        uses: actions/checkout@v2
+
+      - name: 'Test args reader'
+        id: parse_commit_args
+        uses: LamaAni/parse-commit-args-action@master
+
+      - name: 'Echo value'
+        run: echo "$THEVAL"
+        env:
+          THEVAL: ${{matrix.num}}
