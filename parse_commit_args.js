@@ -163,7 +163,7 @@ class CommitArgs {
           match.length < 2
             ? match[0]
             : match.slice(1).join(ARG_REGEX_GROUP_JOIN_SYMBOL)
-        arg_name = arg_name.replace('[^w]', '_')
+        arg_name = arg_name.replace(/[^\w]/g, '_')
       } else {
         if (arg_name != null) this[arg_name] = word
         arg_name = null
