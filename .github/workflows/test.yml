@@ -24,31 +24,31 @@ jobs:
         env:
           THE_ARGS: '${{ toJSON(steps.parse_commit_args.outputs) }}'
 
-  prepare:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Create the run matrix'
-        id: set-matrix
-        run: echo "::set-output name=matrix::{num:[0,1,2]}"
-    outputs:
-      matrix: '{num:[0,1,2]}'
+  # prepare:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: 'Create the run matrix'
+  #       id: set-matrix
+  #       run: echo "::set-output name=matrix::{num:[0,1,2]}"
+  #   outputs:
+  #     matrix: '{num:[0,1,2]}'
 
-  paralell:
-    needs:
-      - prepare
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix: ${{ fromJSON(needs.prepare.outputs.matrix)}}
-    steps:
-      - name: 'Checkout the code'
-        uses: actions/checkout@v2
+  # paralell:
+  #   needs:
+  #     - prepare
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: true
+  #     matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+  #   steps:
+  #     - name: 'Checkout the code'
+  #       uses: actions/checkout@v2
 
-      - name: 'Test args reader'
-        id: parse_commit_args
-        uses: LamaAni/parse-commit-args-action@master
+  #     - name: 'Test args reader'
+  #       id: parse_commit_args
+  #       uses: LamaAni/parse-commit-args-action@master
 
-      - name: 'Echo value'
-        run: echo "$THEVAL"
-        env:
-          THEVAL: ${{matrix.num}}
+  #     - name: 'Echo value'
+  #       run: echo "$THEVAL"
+  #       env:
+  #         THEVAL: ${{matrix.num}}

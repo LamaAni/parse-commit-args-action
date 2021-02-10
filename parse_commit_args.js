@@ -163,6 +163,7 @@ class CommitArgs {
           match.length < 2
             ? match[0]
             : match.slice(1).join(ARG_REGEX_GROUP_JOIN_SYMBOL)
+        arg_name = arg_name.replace('[^w]', '_')
       } else {
         if (arg_name != null) this[arg_name] = word
         arg_name = null
@@ -183,7 +184,11 @@ async function parse_args(context = null) {
 
   await do_run_env_script(args)
   if (process.env.RUN_SCRIPT_FILE != null) {
-    await require(process.env.RUN_SCRIPT_FILE)(args)
+    let script_file = process.env.RUN_SCRIPT_FILE
+    if (/^[.]|[^\/]/.test(script_file))
+      script_file = `${process.env.GITHUB_WORKSPACE || ''}${script_file}`
+    console.log('Running parsing script file @ ' + script_file)
+    await require(script_file)(args)
   }
 
   let key = ''
