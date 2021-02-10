@@ -186,7 +186,7 @@ async function parse_args(context = null) {
   if (process.env.RUN_SCRIPT_FILE != null) {
     let script_file = process.env.RUN_SCRIPT_FILE
     if (/^[.]|[^\/]/.test(script_file))
-      script_file = `${process.env.GITHUB_WORKSPACE || ''}${script_file}`
+      script_file = path.join(process.env.GITHUB_WORKSPACE || '', script_file)
     console.log('Running parsing script file @ ' + script_file)
     await require(script_file)(args)
   }
