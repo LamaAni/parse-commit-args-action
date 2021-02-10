@@ -31,7 +31,7 @@ jobs:
         id: set-matrix
         run: echo "::set-output name=matrix::{num:[0,1,2]}"
     outputs:
-      run-parallel-info: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: '{num:[0,1,2]}'
 
   paralell:
     needs:
@@ -39,8 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
-      matrix:
-        num: [0, 1, 2]
+      matrix: ${{ fromJSON(needs.prepare.)}}
     steps:
       - name: 'Checkout the code'
         uses: actions/checkout@v2
