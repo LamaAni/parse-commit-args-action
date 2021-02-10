@@ -119,7 +119,7 @@ class CommitArgs {
     const commit_message = (last_commit || {}).message || null
     if (
       commit_message != null &&
-      commit_message.trim() > 0 &&
+      commit_message.trim().length > 0 &&
       (LOAD_MESSAGE_ARGUMENTS_ON_EVENTS == null ||
         new Set(LOAD_MESSAGE_ARGUMENTS_ON_EVENTS).has(context.eventName))
     )
