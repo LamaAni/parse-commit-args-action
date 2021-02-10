@@ -8,11 +8,11 @@ async function test_context(context) {
 }
 
 async function main() {
-  // console.log(
-  //   await parse_args(require('./.local/example_release_context.json'))
-  // )
-  // await test_context(require('./.local/example_release_context.json'))
-  // await test_context(require('./.local/example_pr_context.json'))
+  console.log(
+    await parse_args(require('./.local/example_release_context.json'))
+  )
+  await test_context(require('./.local/example_release_context.json'))
+  await test_context(require('./.local/example_pr_context.json'))
   process.env.RUN_SCRIPT="console.log('lama'); args.lama=11"
   await test_context(require('./.local/example_push_context.json'))
 }
