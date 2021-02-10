@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
-      matrix: ${{ fromJSON(needs.prepare.)}}
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix)}}
     steps:
       - name: 'Checkout the code'
         uses: actions/checkout@v2
