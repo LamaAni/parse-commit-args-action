@@ -113,7 +113,9 @@ class CommitArgs {
     this.is_release = context.eventName == 'release'
     this.is_pull_request = context.payload.pull_request != null
     this.event_name = context.eventName
-    this.pull_request_merged = (context.payload.pull_request || {}).merged == true
+    this.pull_request_merged =
+      (context.payload.pull_request || {}).merged == true
+    this.pull_request_state = (context.payload.pull_request || {}).state
 
     this.version_type = ref.split('/')[1]
     this.version = path.basename(context.ref)
