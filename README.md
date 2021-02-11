@@ -71,6 +71,7 @@ Name | Description | Overrideable
 ---|---|---
 is_release | If true, this is a release event | true
 is_pull_request | If true, this is a pull request | true
+pull_request_merged | If true, this action is a result of a merged pull request | true
 event_name | The name of the github event | true
 version | The detected version (defaults to branch, head or tag). Will match the release name | true
  | |
