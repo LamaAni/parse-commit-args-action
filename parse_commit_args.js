@@ -39,28 +39,32 @@ async function get_commits(context = null) {
 
   if (context.payload.commits != null) return context.payload.commits
 
-  let commits_url =
-    (context.payload.pull_request || {}).commits_url ||
-    context.payload.repository.commits_url.replace(
-      '{/sha}',
-      `/${context.payload.pull_request.head.sha}`
-    )
-
   /**
    * @type {[Object]}
    */
   let all_commits = []
   try {
-    if (process.env.GITHUB_TOKEN != null)
-      all_commits = JSON.parse(
-        github.getOctokit(context.sha).request({
-          url: commits_url,
-        })
-      )
-    else
+    if (process.env.GITHUB_TOKEN != null) {
+      console.log('Using Ocktokit')
+      const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
+
+      all_commits = await octokit.pulls.listCommits({
+        owner: context.payload.repository.owner.login,
+        repo: context.payload.repository.name,
+        pull_number: context.payload.pull_request.number,
+      })
+    } else {
+      let commits_url =
+        (context.payload.pull_request || {}).commits_url ||
+        context.payload.repository.commits_url.replace(
+          '{/sha}',
+          `/${context.payload.pull_request.head.sha}`
+        )
+
       all_commits = await get_json_request(commits_url, null, {
         'User-Agent': 'parse-commit-args-action',
       })
+    }
   } catch (err) {
     throw Error(
       'Error retriving commits from: ' + commits_url + `. Details:\n`,
