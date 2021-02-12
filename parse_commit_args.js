@@ -58,6 +58,8 @@ async function get_commits(context = null) {
   return all_commits.map((c) => c.commit)
 }
 
+const PRINT_GITHUB_CONTEXT = process.env.PRINT_GITHUB_CONTEXT == 'true'
+
 const DEFAULT_ARG_MATCH_REGEX = /[-]{2}([a-zA-Z0-9][\w-]+)/g
 const MATCH_ARG_REGEX =
   process.env.MATCH_ARG_REGEX != null

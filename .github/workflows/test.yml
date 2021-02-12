@@ -15,12 +15,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Print github context'
-        run: node print_github_context.js
+      - name: 'Checkout the code'
+        uses: actions/checkout@v2
 
       - name: 'Test args reader'
         id: parse_commit_args
         uses: LamaAni/parse-commit-args-action@master
+        env:
+          PRINT_GITHUB_CONTEXT: true
 
       - name: 'show args'
         run: echo "$THE_ARGS"
