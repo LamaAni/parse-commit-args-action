@@ -2,7 +2,7 @@ name: 'Test action'
 on:
   pull_request:
     types:
-      - open
+      - opened
       - closed
     branches:
       - 'master'
