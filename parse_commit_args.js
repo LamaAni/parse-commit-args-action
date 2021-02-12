@@ -40,7 +40,7 @@ async function get_commits(context = null) {
   if (context.payload.commits != null) return context.payload.commits
 
   let commits_url =
-    context.payload.pull_request.commits_url ||
+    (context.payload.pull_request || {}).commits_url ||
     context.payload.repository.commits_url.replace(
       '{/sha}',
       `/${context.payload.pull_request.head.sha}`
