@@ -39,21 +39,26 @@ async function get_commits(context = null) {
 
   if (context.payload.commits != null) return context.payload.commits
 
-  /** @type {string} */
-  let commits_url =
-    (context.payload.pull_request || {})._links.commits.href ||
-    context.payload.repository.commits_url
+  commits_url = context.payload.repository.commits_url.replace(
+    '{/sha}',
+    `/${context.payload.pull_request.head.sha}`
+  )
 
-  commits_url = commits_url.replace('{/sha}', `/${context.sha}`)
-
+  /**
+   * @type {[Object]}
+   */
   let all_commits = []
   try {
-    /**
-     * @type {[Object]}
-     */
-    all_commits = await get_json_request(commits_url, null, {
-      'User-Agent': 'parse-commit-args-action',
-    })
+    if (process.env.GITHUB_TOKEN != null)
+      all_commits = JSON.parse(
+        github.getOctokit(context.sha).request({
+          url: commits_url,
+        })
+      )
+    else
+      all_commits = await get_json_request(commits_url, null, {
+        'User-Agent': 'parse-commit-args-action',
+      })
   } catch (err) {
     throw Error(
       'Error retriving commits from: ' + commits_url + `. Details:\n`,
