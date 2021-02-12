@@ -130,8 +130,8 @@ class CommitArgs {
       this.pull_request_is_open && !this.pull_request_merged
 
     // parsing args.
-    this.version_type = ref.split('/')[1]
-    this.version = path.basename(context.ref)
+    this.version_type = this.ref_type
+    this.version = this.ref_name
 
     const commit_message = (last_commit || {}).message || null
     if (
