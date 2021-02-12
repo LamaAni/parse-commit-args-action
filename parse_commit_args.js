@@ -237,7 +237,7 @@ if (require.main == module) {
   parse_args().catch((err) => {
     try {
       console.error(err || '[unknown error]')
-      core.setFailed(error.commit_message)
+      core.setFailed(error.commit_message || 'unknown commit message')
     } catch (err) {}
     process.exit(1)
   })
