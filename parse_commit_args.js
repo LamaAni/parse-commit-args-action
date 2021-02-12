@@ -44,7 +44,10 @@ async function get_commits(context = null) {
    */
   let all_commits = []
   try {
-    if (process.env.GITHUB_TOKEN != null) {
+    if (
+      process.env.GITHUB_TOKEN != null &&
+      context.payload.pull_request != null
+    ) {
       console.log('Using Ocktokit')
       const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
 
@@ -64,6 +67,8 @@ async function get_commits(context = null) {
       all_commits = await get_json_request(commits_url, null, {
         'User-Agent': 'parse-commit-args-action',
       })
+      all_commits = Array.isArray(all_commits) ? all_commits : [all_commits]
+      all_commits.map((c) => c.commit)
     }
   } catch (err) {
     throw Error(
@@ -72,9 +77,7 @@ async function get_commits(context = null) {
     )
   }
 
-  all_commits = Array.isArray(all_commits) ? all_commits : [all_commits]
-
-  return all_commits.map((c) => c.commit)
+  return all_commits
 }
 
 const PRINT_GITHUB_CONTEXT = process.env.PRINT_GITHUB_CONTEXT == 'true'
