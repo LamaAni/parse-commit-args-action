@@ -33,6 +33,8 @@ jobs:
       - name: 'parse_commit_args'
         id: args
         uses: LamaAni/parse-commit-args-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'show args'
         run: echo "$THE_ARGS"
