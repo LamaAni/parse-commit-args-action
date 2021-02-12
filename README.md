@@ -69,7 +69,7 @@ git add . && git commit -m"Some commit text --my_flag 120 --is_release true" && 
 
 Name | Description | Overrideable
 ---|---|---
-ref | The name of the branch or tag or the pull request number | true
+ref | The name of the branch/tag or the pull request number | true
 ref_type | The reference type (tags, heads, ...) | true
 ref_group | The reference group type (refs ..) | true
 is_release | If true, this is a release event | true
@@ -89,7 +89,6 @@ pull_request_active | If true the pull request is active (open and !merged) | tr
 version | The detected version (defaults to branch, head or tag). Will match the release name, or the pull request head name | true
  | |
 versions | Spaced out value. Decomposition of the version using a split char (for use in docker releases). eg. fancy.0.1.12 -> fancy fancy.0, fancy.0.1 fancy.0.1.12 | false
-ref | the github ref | false
 last_commit | The last commit | false
 commits | A collection of associated commits | false
 commit_message | The last commit message | false
