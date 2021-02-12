@@ -134,9 +134,7 @@ class CommitArgs {
       this.pull_request_is_open && !this.pull_request_merged
 
     // parsing args.
-    this.version = this.is_pull_request
-      ? this.pull_request_head_ref
-      : this.ref
+    this.version = this.is_pull_request ? this.pull_request_head_ref : this.ref
 
     const commit_message = (last_commit || {}).message || null
     if (
@@ -223,6 +221,9 @@ async function parse_args(context = null) {
     if (key.startsWith('_')) continue
     core.setOutput(key, args[key])
   }
+
+  // set the json args output.
+  core.setOutput('args_as_json', JSON.stringify(args))
 
   return args
 }

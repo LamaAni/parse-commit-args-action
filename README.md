@@ -93,6 +93,7 @@ last_commit | The last commit | false
 commits | A collection of associated commits | false
 commit_message | The last commit message | false
 
+args_as_json | All the arguments as json output. For easy pass between jobs | false
 
 # Environment variables
 
