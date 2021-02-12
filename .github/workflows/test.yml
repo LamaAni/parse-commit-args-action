@@ -5,6 +5,8 @@ on:
       - synchronize
       - opened
       - closed
+      - edited
+      - reopened
     branches:
       - 'master'
   release:

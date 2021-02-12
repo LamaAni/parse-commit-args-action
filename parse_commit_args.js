@@ -112,12 +112,20 @@ class CommitArgs {
     const commits = await get_commits(context)
     const last_commit = commits.length == 0 ? null : commits[commits.length - 1]
 
+    // setting basic flags
     this.is_release = context.eventName == 'release'
     this.is_pull_request = context.payload.pull_request != null
     this.event_name = context.eventName
-    this.pull_request_merged =
-      (context.payload.pull_request || {}).merged == true
-    this.pull_request_state = (context.payload.pull_request || {}).state
+
+    // loading action dependent parameters.
+    const payload = context.payload || {}
+    const pull_request = payload.pull_request || {}
+
+    this.pull_request_action = pull_request.action
+    this.pull_request_merged = pull_request.merged == true
+    this.pull_request_is_open = pull_request.state == 'open'
+    this.pull_request_active =
+      this.pull_request_open && !this.pull_request_merged
 
     this.version_type = ref.split('/')[1]
     this.version = path.basename(context.ref)
