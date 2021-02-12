@@ -46,12 +46,19 @@ async function get_commits(context = null) {
 
   commits_url = commits_url.replace('{/sha}', `/${context.sha}`)
 
-  /**
-   * @type {[Object]}
-   */
-  let all_commits = await get_json_request(commits_url, null, {
-    'User-Agent': 'parse-commit-args-action',
-  })
+  try {
+    /**
+     * @type {[Object]}
+     */
+    let all_commits = await get_json_request(commits_url, null, {
+      'User-Agent': 'parse-commit-args-action',
+    })
+  } catch (err) {
+    throw Error(
+      'Error retriving commits from: ' + commits_url + `. Details:\n`,
+      err
+    )
+  }
 
   all_commits = Array.isArray(all_commits) ? all_commits : [all_commits]
 
