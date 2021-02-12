@@ -2,6 +2,7 @@ name: 'Test action'
 on:
   pull_request:
     types:
+      - synchronize
       - opened
       - closed
     branches:
