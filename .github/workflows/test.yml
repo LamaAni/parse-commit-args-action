@@ -21,12 +21,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
       - name: 'Checkout the code'
         uses: actions/checkout@v2
 
       - name: 'Test args reader'
         id: parse_commit_args
-        uses: LamaAni/parse-commit-args-action@master
+        uses: LamaAni/parse-commit-args-action@${{steps.extract_branch.outputs.name}}
         env:
           PRINT_GITHUB_CONTEXT: true
 
