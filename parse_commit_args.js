@@ -55,7 +55,8 @@ async function get_commits(context = null) {
         owner: context.payload.repository.owner.login,
         repo: context.payload.repository.name,
         pull_number: context.payload.pull_request.number,
-      }).data
+      })
+      all_commits = all_commits.data
     } else {
       let commits_url =
         (context.payload.pull_request || {}).commits_url ||
