@@ -108,25 +108,28 @@ class CommitArgs {
    */
   async load_context(context) {
     context = context || github.context
-    const ref = context.ref || 'unknown/unknown/unknown'
+    const ref = (context.ref || 'unknown/unknown/unknown').split('/')
     const commits = await get_commits(context)
     const last_commit = commits.length == 0 ? null : commits[commits.length - 1]
 
+    const payload = context.payload || {}
     // setting basic flags
+    this.ref_name = ref[2]
+    this.ref_type = ref[1]
+    this.ref_group = ref[0]
     this.is_release = context.eventName == 'release'
     this.is_pull_request = context.payload.pull_request != null
     this.event_name = context.eventName
+    this.action = payload.action
 
-    // loading action dependent parameters.
-    const payload = context.payload || {}
+    // loading pull request parameters
     const pull_request = payload.pull_request || {}
-
-    this.pull_request_action = pull_request.action
     this.pull_request_merged = pull_request.merged == true
     this.pull_request_is_open = pull_request.state == 'open'
     this.pull_request_active =
-      this.pull_request_open && !this.pull_request_merged
+      this.pull_request_is_open && !this.pull_request_merged
 
+    // parsing args.
     this.version_type = ref.split('/')[1]
     this.version = path.basename(context.ref)
 
