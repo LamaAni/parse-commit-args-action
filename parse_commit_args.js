@@ -128,14 +128,15 @@ class CommitArgs {
     const pull_request = payload.pull_request || {}
     this.pull_request_merged = pull_request.merged == true
     this.pull_request_is_open = pull_request.state == 'open'
-    this.pull_request_base_ref = (pull_request.base || {}).ref
-    this.pull_request_head_ref = (pull_request.head || {}).ref
+    this.pull_request_base_ref = (pull_request.base || {}).ref // merge to
+    this.pull_request_head_ref = (pull_request.head || {}).ref // merge from
     this.pull_request_active =
       this.pull_request_is_open && !this.pull_request_merged
 
     // parsing args.
-    this.version_type = this.ref_type
-    this.version = this.ref_name
+    this.version = this.is_pull_request
+      ? this.pull_request_head_ref
+      : this.ref_name
 
     const commit_message = (last_commit || {}).message || null
     if (
