@@ -186,7 +186,13 @@ async function do_run_env_script(args) {
 }
 
 async function parse_args(context = null) {
-  const args = await new CommitArgs().load_context(context || github.context)
+  context = context || github.context
+  if (PRINT_GITHUB_CONTEXT) {
+    console.log('-----------------------------------')
+    console.log(JSON.stringify(context, null, 2))
+    console.log('-----------------------------------')
+  }
+  const args = await new CommitArgs().load_context(context)
 
   await do_run_env_script(args)
   if (process.env.RUN_SCRIPT_FILE != null) {
