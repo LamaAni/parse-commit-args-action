@@ -41,7 +41,7 @@ async function get_commits(context = null) {
 
   /** @type {string} */
   let commits_url =
-    (context.payload.pull_request || {}).commits_url ||
+    (context.payload.pull_request || {})._links.commits.href ||
     context.payload.repository.commits_url
 
   commits_url = commits_url.replace('{/sha}', `/${context.sha}`)
