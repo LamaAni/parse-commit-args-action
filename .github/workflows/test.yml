@@ -15,6 +15,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: 'Print github context'
+        run: node print_github_context.js
+
       - name: 'Test args reader'
         id: parse_commit_args
         uses: LamaAni/parse-commit-args-action@master
