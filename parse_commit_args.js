@@ -46,11 +46,12 @@ async function get_commits(context = null) {
 
   commits_url = commits_url.replace('{/sha}', `/${context.sha}`)
 
+  let all_commits = []
   try {
     /**
      * @type {[Object]}
      */
-    let all_commits = await get_json_request(commits_url, null, {
+    all_commits = await get_json_request(commits_url, null, {
       'User-Agent': 'parse-commit-args-action',
     })
   } catch (err) {
