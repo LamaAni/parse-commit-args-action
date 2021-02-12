@@ -113,6 +113,7 @@ class CommitArgs {
     const last_commit = commits.length == 0 ? null : commits[commits.length - 1]
 
     const payload = context.payload || {}
+    const repository = context.payload.repository || {}
     // setting basic flags
     this.ref_name = ref[2]
     this.ref_type = ref[1]
@@ -121,11 +122,14 @@ class CommitArgs {
     this.is_pull_request = context.payload.pull_request != null
     this.event_name = context.eventName
     this.action = payload.action
+    this.default_branch = repository.default_branch || 'master'
 
     // loading pull request parameters
     const pull_request = payload.pull_request || {}
     this.pull_request_merged = pull_request.merged == true
     this.pull_request_is_open = pull_request.state == 'open'
+    this.pull_request_base_ref = (pull_request.base || {}).ref
+    this.pull_request_head_ref = (pull_request.head || {}).ref
     this.pull_request_active =
       this.pull_request_is_open && !this.pull_request_merged
 

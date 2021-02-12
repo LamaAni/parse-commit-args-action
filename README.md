@@ -76,9 +76,12 @@ is_release | If true, this is a release event | true
 is_pull_request | If true, this is a pull request | true
 event_name | The name of the github event | true
 action | The executing action type (opend, closed ...) | true
+default_branch | The repo default branch (defaults to master) | true
 
 pull_request_merged | If true, this action is a result of a merged pull request | true
 pull_request_state | "closed" "open" | true
+pull_request_base_ref | The base ref for the pull request (merge from) | true
+pull_request_head_ref | The head ref for the pull request (merge to) | true
 pull_request_merged | If true the pull request has been merged | true
 pull_request_is_open | If true the pull request is now open | true
 pull_request_active | If true the pull request is active (open and !merged) | true
