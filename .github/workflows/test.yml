@@ -37,7 +37,7 @@ jobs:
 
       - name: 'Test args reader'
         id: parse_commit_args
-        uses: LamaAni/parse-commit-args-action@master
+        uses: LamaAni/parse-commit-args-action@${{needs.prepare.outputs.branch}}
         env:
           PRINT_GITHUB_CONTEXT: true
           TEST_NEEDS: ${{needs.prepare.outputs.branch}}
