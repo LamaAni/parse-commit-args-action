@@ -55,7 +55,7 @@ async function get_commits(context = null) {
         owner: context.payload.repository.owner.login,
         repo: context.payload.repository.name,
         pull_number: context.payload.pull_request.number,
-      })
+      }).data
     } else {
       let commits_url =
         (context.payload.pull_request || {}).commits_url ||
@@ -67,8 +67,6 @@ async function get_commits(context = null) {
       all_commits = await get_json_request(commits_url, null, {
         'User-Agent': 'parse-commit-args-action',
       })
-      all_commits = Array.isArray(all_commits) ? all_commits : [all_commits]
-      all_commits.map((c) => c.commit)
     }
   } catch (err) {
     throw Error(
@@ -76,6 +74,9 @@ async function get_commits(context = null) {
       err
     )
   }
+
+  all_commits = Array.isArray(all_commits) ? all_commits : [all_commits]
+  all_commits = all_commits.map((c) => c.commit)
 
   return all_commits
 }
