@@ -136,7 +136,7 @@ class CommitArgs {
     // parsing args.
     this.version = this.is_pull_request
       ? this.pull_request_head_ref
-      : this.ref_name
+      : this.ref
 
     const commit_message = (last_commit || {}).message || null
     if (
