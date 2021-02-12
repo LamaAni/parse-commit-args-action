@@ -115,7 +115,7 @@ class CommitArgs {
     const payload = context.payload || {}
     const repository = context.payload.repository || {}
     // setting basic flags
-    this.ref_name = ref[2]
+    this.ref = ref[2]
     this.ref_type = ref[1]
     this.ref_group = ref[0]
     this.is_release = context.eventName == 'release'
@@ -157,7 +157,6 @@ class CommitArgs {
       })
       .join(' ')
 
-    this.ref = ref
     this.commits = commits
     this.last_commit = last_commit
     this.commit_message = commit_message

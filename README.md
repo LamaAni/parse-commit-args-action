@@ -69,13 +69,13 @@ git add . && git commit -m"Some commit text --my_flag 120 --is_release true" && 
 
 Name | Description | Overrideable
 ---|---|---
-ref_name | The branch or tag name | true
+ref | The name of the branch or tag or the pull request number | true
 ref_type | The reference type (tags, heads, ...) | true
 ref_group | The reference group type (refs ..) | true
 is_release | If true, this is a release event | true
 is_pull_request | If true, this is a pull request | true
 event_name | The name of the github event | true
-action | The executing action type (opend, closed ...) | true
+action | The executing action type (opened, closed ...) | true
 default_branch | The repo default branch (defaults to master) | true
 
 pull_request_merged | If true, this action is a result of a merged pull request | true
@@ -86,7 +86,7 @@ pull_request_merged | If true the pull request has been merged | true
 pull_request_is_open | If true the pull request is now open | true
 pull_request_active | If true the pull request is active (open and !merged) | true
 
-version | The detected version (defaults to branch, head or tag). Will match the release name | true
+version | The detected version (defaults to branch, head or tag). Will match the release name, or the pull request head name | true
  | |
 versions | Spaced out value. Decomposition of the version using a split char (for use in docker releases). eg. fancy.0.1.12 -> fancy fancy.0, fancy.0.1 fancy.0.1.12 | false
 ref | the github ref | false
