@@ -37,6 +37,7 @@ const path = require('path')
 async function get_commits(context = null) {
   context = context || github.context
 
+  if (context.payload.release != null) return [] // no commits on release.
   if (context.payload.commits != null) return context.payload.commits
 
   /**
@@ -48,7 +49,7 @@ async function get_commits(context = null) {
       process.env.GITHUB_TOKEN != null &&
       context.payload.pull_request != null
     ) {
-      console.log('Using Ocktokit')
+      console.log('Loading from pull request')
       const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
 
       all_commits = await octokit.pulls.listCommits({
@@ -58,20 +59,28 @@ async function get_commits(context = null) {
       })
       all_commits = all_commits.data
     } else {
-      let commits_url =
-        (context.payload.pull_request || {}).commits_url ||
-        context.payload.repository.commits_url.replace(
-          '{/sha}',
-          `/${context.payload.pull_request.head.sha}`
-        )
+      // getting the commit for the sha only.
+      console.log('Loading from sha')
+      const kit = github.getOctokit(process.env.GITHUB_TOKEN)
 
-      all_commits = await get_json_request(commits_url, null, {
-        'User-Agent': 'parse-commit-args-action',
-      })
+      all_commits = [
+        await kit.git.getCommit({
+          commit_sha: context.sha,
+        }),
+      ]
+      // let commits_url =
+      //   (context.payload.pull_request || {}).commits_url ||
+      //   context.payload.repository.commits_url.replace(
+      //     '{/sha}',
+      //     `/${context.payload.pull_request.head.sha}`
+      //   )
+
+      // all_commits = await get_json_request(commits_url, null, {
+      //   'User-Agent': 'parse-commit-args-action',
+      // })
     }
   } catch (err) {
-    err.message =
-      'Error retrieving commits from: ' + commits_url + (err.message || '')
+    err.message = 'Error retrieving commits. ' + (err.message || '')
     throw err
   }
 
