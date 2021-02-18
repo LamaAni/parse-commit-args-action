@@ -70,10 +70,9 @@ async function get_commits(context = null) {
       })
     }
   } catch (err) {
-    throw Error(
-      'Error retriving commits from: ' + commits_url + `. Details:\n`,
-      err
-    )
+    err.message =
+      'Error retrieving commits from: ' + commits_url + (err.message || '')
+    throw err
   }
 
   all_commits = Array.isArray(all_commits) ? all_commits : [all_commits]
