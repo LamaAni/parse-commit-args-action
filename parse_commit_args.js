@@ -260,6 +260,8 @@ module.exports = {
 if (require.main == module) {
   parse_args().catch((err) => {
     try {
+      console.log('Context:')
+      console.log(JSON.stringify(github.context))
       console.error(err || '[unknown error]')
       core.setFailed(error.commit_message || 'unknown commit message')
     } catch (err) {}
