@@ -168,7 +168,7 @@ class CommitArgs {
     // parsing args.
     this.version = this.is_pull_request ? this.pull_request_head_ref : this.ref
     this.version = this.version || 'unknown-version'
-    this.version = this.version.replace(/[^\w-]/, '-')
+    this.version = this.version.replace(/[^\w.-]/, '-')
 
     const commit_message = (last_commit || {}).message || null
     if (
