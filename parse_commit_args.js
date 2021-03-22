@@ -204,6 +204,8 @@ class CommitArgs {
     const words = (message || this.commit_message || '').match(
       /[^\s"'][^\s]+|["][^"]*["]|['][^']+[']/g
     )
+    if (words == null) return
+
     let arg_name = null
     for (let word of words) {
       word = word.trim()
