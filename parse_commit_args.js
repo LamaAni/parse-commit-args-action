@@ -58,7 +58,7 @@ async function get_commits(context = null) {
           owner: context.payload.repository.owner.login,
           repo: context.payload.repository.name,
           pull_number: context.payload.pull_request.number,
-          per_page: 250,
+          per_page: 100,
           page: page,
         })
         page += 1
