@@ -275,6 +275,8 @@ if (require.main == module) {
       console.error(err || '[unknown error]')
       core.setFailed(error.commit_message || 'unknown commit message')
     } catch (err) {}
+    console.error(err)
+    console.error('error while printing')
     process.exit(1)
   })
 }
