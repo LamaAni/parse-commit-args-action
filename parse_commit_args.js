@@ -83,6 +83,9 @@ async function get_commits(context = null) {
 
   all_commits = Array.isArray(all_commits) ? all_commits : [all_commits]
   all_commits = all_commits.map((c) => c.commit)
+  all_commits = all_commits.sort(
+    (a, b) => Date.parse(b.author.date) - Date.parse(a.author.date)
+  )
 
   return all_commits
 }
@@ -138,8 +141,8 @@ class CommitArgs {
   async load_context(context) {
     context = context || github.context
     const ref = (context.ref || 'unknown/unknown/unknown').split('/')
-    const commits = await get_commits(context)
-    const last_commit = commits.length == 0 ? null : commits[commits.length - 1]
+    const commits = (await get_commits(context)).slice(0, 10)
+    const last_commit = commits.length == 0 ? null : commits[0]
 
     const payload = context.payload || {}
     const repository = context.payload.repository || {}
