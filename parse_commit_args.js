@@ -52,12 +52,19 @@ async function get_commits(context = null) {
       console.log('Loading from pull request')
       const octokit = github.getOctokit(process.env.GITHUB_TOKEN)
 
-      all_commits = await octokit.pulls.listCommits({
-        owner: context.payload.repository.owner.login,
-        repo: context.payload.repository.name,
-        pull_number: context.payload.pull_request.number,
-      })
-      all_commits = all_commits.data
+      let page = 0
+      while (true) {
+        const page_commits = await octokit.pulls.listCommits({
+          owner: context.payload.repository.owner.login,
+          repo: context.payload.repository.name,
+          pull_number: context.payload.pull_request.number,
+          per_page: 250,
+          page: page,
+        })
+        page += 1
+        if (page_commits.data.length == 0) break
+        all_commits = all_commits.concat(page_commits.data)
+      }
     } else {
       // getting the commit for the sha only.
       console.log('Loading from sha')
@@ -68,16 +75,6 @@ async function get_commits(context = null) {
           commit_sha: context.sha,
         }),
       ]
-      // let commits_url =
-      //   (context.payload.pull_request || {}).commits_url ||
-      //   context.payload.repository.commits_url.replace(
-      //     '{/sha}',
-      //     `/${context.payload.pull_request.head.sha}`
-      //   )
-
-      // all_commits = await get_json_request(commits_url, null, {
-      //   'User-Agent': 'parse-commit-args-action',
-      // })
     }
   } catch (err) {
     err.message = 'Error retrieving commits. ' + (err.message || '')
