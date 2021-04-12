@@ -86,7 +86,6 @@ async function get_commits(context = null) {
   all_commits = all_commits.sort(
     (a, b) => Date.parse(b.author.date) - Date.parse(a.author.date)
   )
-
   return all_commits
 }
 
@@ -151,6 +150,7 @@ class CommitArgs {
     this.ref_type = ref[1]
     this.ref_group = ref[0]
     this.is_release = context.eventName == 'release'
+    this.is_prerelease = (context.payload.release || {}).prerelease == true
     this.is_pull_request = context.payload.pull_request != null
     this.event_name = context.eventName
     this.action = payload.action
