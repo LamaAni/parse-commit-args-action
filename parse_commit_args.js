@@ -241,15 +241,17 @@ async function parse_args(context = null) {
     console.log(JSON.stringify(context, null, 2))
     console.log('-----------------------------------')
   }
-  const args = await new CommitArgs().load_context(context)
+  let args = await new CommitArgs().load_context(context)
 
   await do_run_env_script(args)
+
   if (process.env.RUN_SCRIPT_FILE != null) {
     let script_file = process.env.RUN_SCRIPT_FILE
     if (/^[.]|[^\/]/.test(script_file))
       script_file = path.join(process.env.GITHUB_WORKSPACE || '', script_file)
     console.log('Running parsing script file @ ' + script_file)
-    await require(script_file)(args)
+    const rt_value = await require(script_file)(args)
+    if (typeof rt_value == 'object' && rt_value != null) args = rt_value
   }
 
   let key = ''

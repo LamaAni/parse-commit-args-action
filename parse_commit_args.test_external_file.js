@@ -1,7 +1,10 @@
+const path = require('path')
 const { CommitArgs, parse_args } = require('./parse_commit_args')
 
 async function test_context(context) {
-
+  process.env.RUN_SCRIPT_FILE = path.resolve(
+    path.join(__dirname, '.local', 'prepare.js')
+  )
   const args = await parse_args(context)
   console.log('------------------------')
   console.log(args)
