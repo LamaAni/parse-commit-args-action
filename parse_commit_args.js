@@ -168,7 +168,7 @@ class CommitArgs {
     this.pull_request_active =
       this.pull_request_is_open && !this.pull_request_merged
     this.pull_request_url = this.is_pull_request
-      ? ((context.pull_request._links || {}).comments || {}).href
+      ? ((context.payload.pull_request._links || {}).comments || {}).href
       : null
 
     // parsing args.
