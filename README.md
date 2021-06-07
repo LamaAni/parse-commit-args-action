@@ -80,6 +80,9 @@ event_name | The name of the github event | true
 action | The executing action type (opened, closed ...) | true
 default_branch | The repo default branch (defaults to master) | true
 
+user_name | The name of the user/actor that triggered the action | true
+user_type | The type of the user/actor that triggered the action | true
+
 pull_request_merged | If true, this action is a result of a merged pull request | true
 pull_request_state | "closed" "open" | true
 pull_request_base_ref | The base ref for the pull request (merge to) | true
@@ -87,6 +90,7 @@ pull_request_head_ref | The head ref for the pull request (merge from) | true
 pull_request_merged | If true the pull request has been merged | true
 pull_request_is_open | If true the pull request is now open | true
 pull_request_active | If true the pull request is active (open and !merged) | true
+pull_request_url | The url for the PR | true
 
 version | The detected version (defaults to branch, head or tag). Will match the release name, or the pull request head name | true
  | |

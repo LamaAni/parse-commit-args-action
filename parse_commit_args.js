@@ -156,6 +156,9 @@ class CommitArgs {
     this.action = payload.action
     this.default_branch = repository.default_branch || 'master'
 
+    this.user_name = context.payload.sender.login || context.payload.sender.name
+    this.user_type = context.payload.sender.type
+
     // loading pull request parameters
     const pull_request = payload.pull_request || {}
     this.pull_request_merged = pull_request.merged == true
@@ -164,6 +167,9 @@ class CommitArgs {
     this.pull_request_head_ref = (pull_request.head || {}).ref // merge from
     this.pull_request_active =
       this.pull_request_is_open && !this.pull_request_merged
+    this.pull_request_url = this.is_pull_request
+      ? ((context.pull_request._links || {}).comments || {}).href
+      : null
 
     // parsing args.
     this.version = this.is_pull_request ? this.pull_request_head_ref : this.ref
